@@ -13,7 +13,13 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
         with:
           args: >
-            A pull request has been **${{ github.event.pull_request.state }}** 🚀  
-            **Title:** ${{ github.event.pull_request.title }}  
-            **Author:** ${{ github.event.pull_request.user.login }}  
-            **URL:** ${{ github.event.pull_request.html_url }}
+            📢 **Pull Request Update**  
+            🆕 **Status:** ${{ github.event.pull_request.state }}
+              {% if github.event.pull_request.merged %}
+              ✅ **Merged:** Yes 🎉
+              {% else %}
+              ❌ **Merged:** No
+              {% endif %}
+            📝 **Title:** ${{ github.event.pull_request.title }}  
+            👤 **Author:** ${{ github.event.pull_request.user.login }}  
+            🔗 **URL:** ${{ github.event.pull_request.html_url }}
