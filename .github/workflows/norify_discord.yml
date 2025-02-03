@@ -15,13 +15,18 @@ jobs:
           DISCORD_AVATAR: https://resize.programme-television.ladmedia.fr/r/670,670/img/var/premiere/storage/images/tele-7-jours/news-tv/oss-117-le-caire-nid-d-espions-c8-le-show-de-jean-dujardin-4484285/90175763-1-fre-FR/OSS-117-Le-Caire-nid-d-espions-C8-Le-show-de-Jean-Dujardin.jpg
         with:
           args: >
-            📢 **Pull Request Update**\n\n
-            🆕 **Status:** ${{ github.event.pull_request.state }}\n\n
-              {% if github.event.pull_request.merged %}\n\n
+            📢 **Pull Request Update*
+
+            🆕 **Status:** ${{ github.event.pull_request.state }}
+
+              {% if github.event.pull_request.merged %}
               ✅ **Merged:** Yes 🎉
               {% else %}
               ❌ **Merged:** No
               {% endif %}
-            📝 **Title:** ${{ github.event.pull_request.title }}\n\n
-            👤 **Author:** ${{ github.event.pull_request.user.login }}\n\n
+            
+            📝 **Title:** ${{ github.event.pull_request.title }}
+
+            👤 **Author:** ${{ github.event.pull_request.user.login }}
+            
             🔗 **URL:** ${{ github.event.pull_request.html_url }}
