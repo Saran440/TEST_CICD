@@ -11,19 +11,13 @@ jobs:
         uses: Ilshidur/action-discord@master
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          DISCORD_USERNAME: OSS 117
-          DISCORD_AVATAR: https://resize.programme-television.ladmedia.fr/r/670,670/img/var/premiere/storage/images/tele-7-jours/news-tv/oss-117-le-caire-nid-d-espions-c8-le-show-de-jean-dujardin-4484285/90175763-1-fre-FR/OSS-117-Le-Caire-nid-d-espions-C8-Le-show-de-Jean-Dujardin.jpg
         with:
           args: >
             📢 **Pull Request Update*
 
-            🆕 **Status:** ${{ github.event.pull_request.state }}
+            **Status:** ${{ github.event.pull_request.state }}
 
-              {% if github.event.pull_request.merged %}
-              ✅ **Merged:** Yes 🎉
-              {% else %}
-              ❌ **Merged:** No
-              {% endif %}
+              ${{ github.event.pull_request.merged == true && '✅ **Merged:** Yes 🎉' || '❌ **Merged:** No' }}
             
             📝 **Title:** ${{ github.event.pull_request.title }}
 
