@@ -24,12 +24,32 @@ jobs:
           git fetch bitbucket
           git push --force bitbucket 15.0-fix-module
 
+  # notify:
+  #   needs: [deploy]
+  #   runs-on: ubuntu-latest
+  #   if: failure()
+  #   steps:
+  #     - uses: lacherogwu/failed-jobs-discord-notification-action@v1
+  #       with:
+  #         discord_webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+  #         needs_json: ${{ toJSON(needs) }}
+
+name: PR Notifications to Discord
+on:
+  pull_request:
+    types: [opened, closed]
+
+jobs:
   notify:
-    needs: [deploy]
     runs-on: ubuntu-latest
-    if: failure()
     steps:
-      - uses: lacherogwu/failed-jobs-discord-notification-action@v1
+      - name: Send Discord Notification
+        uses: Ilshidur/action-discord@master
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
         with:
-          discord_webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          needs_json: ${{ toJSON(needs) }}
+          args: >
+            A pull request has been **${{ github.event.pull_request.state }}** 🚀  
+            **Title:** ${{ github.event.pull_request.title }}  
+            **Author:** ${{ github.event.pull_request.user.login }}  
+            **URL:** ${{ github.event.pull_request.html_url }}
