@@ -1,0 +1,24 @@
+name: Deploy to Bitbucket
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Configure Git and Push
+        env:
+          BITBUCKET_USERNAME: ${{ secrets.BITBUCKET_USERNAME }}
+          BITBUCKET_APP_PASSWORD: ${{ secrets.BITBUCKET_APP_PASSWORD }}
+          BITBUCKET_REPO_URL: ${{ secrets.BITBUCKET_REPO_URL }}
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "saranl@ecosoft.co.th"
+          git remote add bitbucket "$BITBUCKET_REPO_URL"
+          git push --force bitbucket 15.0-fix-module
