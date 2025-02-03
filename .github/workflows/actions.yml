@@ -23,14 +23,13 @@ jobs:
           git remote add bitbucket "$BITBUCKET_REPO_URL"
           git fetch bitbucket
           git push --force bitbucket 15.0-fix-module
-        
-    
-    notify:
-      needs: [deploy]
-      runs-on: ubuntu-latest
-      if: failure()
-      steps:
-        - uses: lacherogwu/failed-jobs-discord-notification-action@v1
-          with:
-            discord_webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}
-            needs_json: ${{ toJSON(needs) }}
+
+  notify:
+    needs: [deploy]
+    runs-on: ubuntu-latest
+    if: failure()
+    steps:
+      - uses: lacherogwu/failed-jobs-discord-notification-action@v1
+        with:
+          discord_webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          needs_json: ${{ toJSON(needs) }}
