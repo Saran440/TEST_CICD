@@ -1,35 +1,31 @@
-name: Deploy to Bitbucket
+name: Sync PR to Bitbucket
 
 on:
-  push:
-    branches: [ "main" ]
+  pull_request:
+    types: [opened, synchronize, closed]
 
 jobs:
-  deploy:
+  sync-to-bitbucket:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+      - name: Checkout GitHub Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch full history to avoid shallow clone error
 
-      - name: Configure Git and Push
-        env:
-          BITBUCKET_USERNAME: ${{ secrets.BITBUCKET_USERNAME }}
-          BITBUCKET_APP_PASSWORD: ${{ secrets.BITBUCKET_APP_PASSWORD }}
-          BITBUCKET_REPO_URL: ${{ secrets.BITBUCKET_REPO_URL }}
+      - name: Push to Bitbucket
         run: |
+          git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
-          git config --global user.email "saranl@ecosoft.co.th"
-          git remote add bitbucket "$BITBUCKET_REPO_URL"
-          git fetch bitbucket
-          git push --force bitbucket 15.0-fix-module
+          git remote add bitbucket https://${{ secrets.BITBUCKET_USERNAME }}:${{ secrets.BITBUCKET_APP_PASSWORD }}@bitbucket.org/${{ secrets.BITBUCKET_REPO }}.git
+          git push --force bitbucket HEAD:refs/heads/${{ github.event.pull_request.head.ref }}
 
-  # notify:
-  #   needs: [deploy]
-  #   runs-on: ubuntu-latest
-  #   if: failure()
-  #   steps:
-  #     - uses: lacherogwu/failed-jobs-discord-notification-action@v1
-  #       with:
-  #         discord_webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}
-  #         needs_json: ${{ toJSON(needs) }}
+  notify:
+    needs: [sync-to-bitbucket]
+    runs-on: ubuntu-latest
+    if: failure()
+    steps:
+      - uses: lacherogwu/failed-jobs-discord-notification-action@v1
+        with:
+          discord_webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          needs_json: ${{ toJSON(needs) }}
