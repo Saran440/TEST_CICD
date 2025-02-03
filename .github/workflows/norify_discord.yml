@@ -1,0 +1,19 @@
+name: PR Notifications to Discord
+on:
+  pull_request:
+    types: [opened, closed]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Discord Notification
+        uses: Ilshidur/action-discord@master
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        with:
+          args: >
+            A pull request has been **${{ github.event.pull_request.state }}** 🚀  
+            **Title:** ${{ github.event.pull_request.title }}  
+            **Author:** ${{ github.event.pull_request.user.login }}  
+            **URL:** ${{ github.event.pull_request.html_url }}
